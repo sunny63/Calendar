@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".TaskActivity">
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/editTextStatus"
+            android:hint="Status"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/editTextDescription"/>
+    <com.google.android.material.appbar.AppBarLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:theme="@style/AppTheme.AppBarOverlay" android:id="@+id/appBarLayout">
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:ems="10"
+            android:id="@+id/editTextStartTime"
+            app:layout_constraintEnd_toStartOf="@+id/button" android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/textViewStartTime"/>
+    <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/chipAllDay" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="13dp"
+            android:text="All day"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
+            tools:layout_editor_absoluteY="411dp"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/editTextName"
+            android:hint="Name" android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPostalAddress"
+            android:ems="10"
+            android:id="@+id/editTextAdress"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent" android:hint="Adress"
+            app:layout_constraintTop_toBottomOf="@+id/editTextStatus" android:layout_marginTop="16dp"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/editTextDescription"
+            android:hint="Description" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/editTextName"/>
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:ems="10"
+            android:id="@+id/editTextEndTime"
+            app:layout_constraintStart_toEndOf="@+id/button" android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
+            app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/textViewStartTime"/>
+    <Button
+            android:layout_width="20dp"
+            android:layout_height="44dp"
+            android:id="@+id/button" android:textColor="#FFFFFF"
+            android:textIsSelectable="false" android:visibility="invisible" android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.498"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/textViewStartTime"/>
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/editTextEndDate" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"
+            tools:layout_editor_absoluteY="351dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"/>
+    <TextView
+            android:text="End Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewEndDate"
+            android:textColor="#000000"
+            tools:layout_editor_absoluteY="324dp" app:layout_constraintStart_toStartOf="@+id/editTextEndDate"
+            android:layout_marginStart="4dp"/>
+    <TextView
+            android:text="Start Time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewStartTime" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/chipAllDay"
+            android:textColor="#000000"/>
+    <TextView
+            android:text="End Time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewEndTime" app:layout_constraintStart_toEndOf="@+id/button"
+            android:layout_marginStart="12dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/editTextEndTime" android:textColor="#000000"/>
+    <Button style="@style/OrangeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonAdd" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp" android:text="ADD" />
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:srcCompat="@drawable/ic_button_repeat"
+            android:id="@+id/buttonRepeat"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/editTextStartTime"/>
+    <TextView
+            android:text="Repeat Event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" tools:layout_editor_absoluteY="559dp"
+            android:id="@+id/textView7" app:layout_constraintStart_toEndOf="@+id/buttonRepeat"
+            android:layout_marginStart="8dp" android:textColor="#000000"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
