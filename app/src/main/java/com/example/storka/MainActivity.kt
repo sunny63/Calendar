@@ -14,6 +14,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.storka.api.ExtendedEventInstance
 import com.example.storka.decorator.EventDecorator
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -92,8 +93,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener {
+            val selectedDayNow = dateTimeToTimestamp(selectedDay.date.atStartOfDay())
             val intent = Intent(this@MainActivity, EventActivity::class.java).apply {
                 action = "CREATE"
+                putExtra("selectedDayNow", selectedDayNow)
             }
             startActivityForResult(intent, 1)
         }
@@ -135,12 +138,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateAdapterForDate(date: CalendarDay) {
+        val events = viewModel.events.value?.associateBy { it.id } ?: emptyMap()
         val eventsForToday = if (daysWithEvents.keys.contains(date)) {
-            viewModel.events.value?.filter {
-                daysWithEvents[date]?.contains(it.id) ?: false
-            }
+            viewModel.eventInstances.value?.filter {
+                val start = timestampToDateTime(it.started_at).toLocalDate()
+                val end = timestampToDateTime(it.ended_at).toLocalDate()
+                date.date in start..end
+            }?.map { ExtendedEventInstance(events[it.event_id]?.name ?: "", it) }?.sortedBy { it.instance.started_at }
         } else emptyList()
-        if (eventsForToday !== null) eventAdapter.setEvents(eventsForToday)
+        if (eventsForToday !== null) eventAdapter.setEvents(eventsForToday, selectedDay.date)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

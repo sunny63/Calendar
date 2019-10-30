@@ -150,5 +150,13 @@
             android:textSize="21sp"
             app:layout_constraintBottom_toBottomOf="@+id/button" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"/>
+    <TextView
+            android:text="Change repeat rule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewChangeRepeatRule"
+            app:layout_constraintTop_toTopOf="@+id/switchRepeatEvent" android:layout_marginTop="3dp"
+            android:textColor="#000000" app:layout_constraintStart_toEndOf="@+id/switchRepeatEvent"
+            android:layout_marginStart="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

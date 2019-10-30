@@ -173,3 +173,7 @@ class TaskPostModel(
     var status: String?
 )
 
+class ExtendedEventInstance(
+    val name: String?,
+    val instance: EventInstanceModel
+)

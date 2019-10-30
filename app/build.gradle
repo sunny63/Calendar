@@ -60,6 +60,8 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0"
 
+    //lib
+    implementation 'org.dmfs:lib-recur:0.9.2'
 
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'

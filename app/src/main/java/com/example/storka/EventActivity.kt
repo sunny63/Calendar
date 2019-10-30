@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.storka.api.EventFullModel
@@ -17,6 +18,7 @@ import com.example.storka.api.PatternPostModel
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_event.*
 import kotlinx.android.synthetic.main.content_event.*
+import kotlinx.android.synthetic.main.content_repeat.*
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
@@ -38,21 +40,16 @@ class EventActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
 
-        var startedAt = LocalDateTime.now()
-        var endedAt = LocalDateTime.now().plusHours(2)
+        val selectedDayNow = timestampToDateTime(intent.getLongExtra("selectedDayNow", -1))
+
+        var startedAt = selectedDayNow.plusHours(10)
+        var endedAt = selectedDayNow.plusHours(12)
+
+
+//        var startedAt = LocalDateTime.now().plusHours(10)
+//        var endedAt = LocalDateTime.now().plusHours(12)
 
         viewModel = ViewModelProviders.of(this).get(CalendarViewModel::class.java)
-
-        switchRepeatEvent.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                val intent = Intent(this@EventActivity, RepeatActivity::class.java).apply {
-                    putExtra("rule", rule)
-                    putExtra("day", startedAt.dayOfMonth)
-                    putExtra("month", startedAt.monthValue)
-                }
-                startActivityForResult(intent, 1)
-            }
-        }
 
         if (intent.action == "EDIT") {
             eventId = intent.getLongExtra("event_id", -1)
@@ -73,11 +70,29 @@ class EventActivity : AppCompatActivity() {
             startedAt = timestampToDateTime(started_at)
             endedAt = timestampToDateTime(ended_at)
         }
+        if (!rule.isNullOrBlank() && rule != "FREQ=DAILY;INTERVAL=1;COUNT=1") {
+            switchRepeatEvent.isChecked = true
+            textViewChangeRepeatRule.isVisible = true
+        } else textViewChangeRepeatRule.isVisible = false
 
         editTextStartDate.text = dateFormatter.format(startedAt)
         editTextEndDate.setText(dateFormatter.format(endedAt))
         editTextStartTime.setText(timeFormatter.format(startedAt))
         editTextEndTime.setText(timeFormatter.format(endedAt))
+
+        switchRepeatEvent.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                val intent = Intent(this@EventActivity, RepeatActivity::class.java).apply {
+                    putExtra("rule", rule)
+                    putExtra("day", startedAt.dayOfMonth)
+                    putExtra("month", startedAt.monthValue)
+                }
+                startActivityForResult(intent, 1)
+            } else {
+                rule = null
+                textViewChangeRepeatRule.isVisible = false
+            }
+        }
 
         editTextStartTime.setOnClickListener {
             val now = LocalDateTime.now()
@@ -136,6 +151,16 @@ class EventActivity : AppCompatActivity() {
         }
 
 
+        textViewChangeRepeatRule.setOnClickListener {
+                val intent = Intent(this@EventActivity, RepeatActivity::class.java).apply {
+                    putExtra("rule", rule)
+                    putExtra("day", startedAt.dayOfMonth)
+                    putExtra("month", startedAt.monthValue)
+                }
+                startActivityForResult(intent, 1)
+        }
+
+
         buttonAdd.setOnClickListener {
             val replyIntent = Intent()
             val name = editTextName.text.toString()
@@ -185,9 +210,6 @@ class EventActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK, replyIntent)
             finish()
         }
-
-    //    if (!rule.isNullOrBlank()) switchRepeatEvent.isChecked = true
-
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
@@ -249,13 +271,18 @@ class EventActivity : AppCompatActivity() {
             .create()
             .show()
     }
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        switchRepeatEvent.isChecked = resultCode != Activity.RESULT_CANCELED
+        val newRule = data?.getStringExtra("rule")
+
+        switchRepeatEvent.isChecked = (resultCode != Activity.RESULT_CANCELED ) || (rule != null && rule != "FREQ=DAILY;INTERVAL=1;COUNT=1")
+        textViewChangeRepeatRule.isVisible = (resultCode != Activity.RESULT_CANCELED) || (rule != null && rule != "FREQ=DAILY;INTERVAL=1;COUNT=1")
 
         if (resultCode == Activity.RESULT_OK) {
-            rule = data?.getStringExtra("rule")
+            rule = newRule
         }
     }
 

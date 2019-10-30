@@ -7,7 +7,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="week_view">Week</string>
+    <string name="week_view">Day</string>
     <string name="month_view">Month</string>
     <string name="sing_out">Sing out</string>
     <string name="sing_in">Sing in</string>

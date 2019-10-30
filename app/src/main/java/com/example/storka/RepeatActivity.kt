@@ -11,8 +11,11 @@ import android.widget.ArrayAdapter
 import android.widget.Switch
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_repeat.*
+import kotlinx.android.synthetic.main.content_event.*
 import kotlinx.android.synthetic.main.content_repeat.*
+import org.dmfs.rfc5545.recur.RecurrenceRule
 
 class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
@@ -25,6 +28,7 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         setContentView(R.layout.activity_repeat)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val rule = intent.getStringExtra("rule")
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter.createFromResource(
@@ -58,6 +62,55 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         switchMon.isChecked = true
         radioGroup.check(R.id.radioBtnNever)
 
+        if (rule != "FREQ=DAILY;INTERVAL=1;COUNT=1" && rule != null) {
+            val rrule = RecurrenceRule(rule)
+
+            val ruleCount = rrule.count
+            val ruleFreq = rrule.freq
+            val ruleInterval = rrule.interval
+            val isInfinit = rrule.isInfinite
+
+            when (ruleFreq) {
+                RecurrenceRule.Freq.DAILY -> spinnerRepeatMode.setSelection(0)
+                RecurrenceRule.Freq.WEEKLY -> spinnerRepeatMode.setSelection(1)
+                RecurrenceRule.Freq.MONTHLY -> spinnerRepeatMode.setSelection(2)
+                RecurrenceRule.Freq.YEARLY -> spinnerRepeatMode.setSelection(3)
+            }
+
+            if (ruleFreq.name == "WEEKLY") {
+                val weekDays =
+                    rule.split(";").find { it.startsWith("BYDAY=") }?.replace("BYDAY=", "")?.split(",") ?: emptyList()
+
+                if (weekDays.contains("TU")) switchTue.isChecked = true
+                if (weekDays.contains("WE")) switchWen.isChecked = true
+                if (weekDays.contains("TH")) switchThu.isChecked = true
+                if (weekDays.contains("FR")) switchFri.isChecked = true
+                if (weekDays.contains("SA")) switchSat.isChecked = true
+                if (weekDays.contains("SU")) switchSun.isChecked = true
+                switchMon.isChecked = weekDays.contains("MO")
+            }
+
+
+            if (isInfinit) {
+                radioGroup.check(R.id.radioBtnNever)
+                editTextRepeatEndAfter.isEnabled = false
+                editTextRepeatEndAfter.setTextIsSelectable(false)
+                textEnd2.setTextColor(Color.rgb(139, 139, 139))
+                radioBtnAfter.setTextColor(Color.rgb(139, 139, 139))
+            } else {
+                radioGroup.check(R.id.radioBtnAfter)
+                editTextRepeatEndAfter.setText("$ruleCount")
+                editTextRepeatEndAfter.isEnabled = true
+                editTextRepeatEndAfter.setTextIsSelectable(true)
+                textEnd2.setTextColor(Color.rgb(0, 0, 0))
+                radioBtnAfter.setTextColor(Color.rgb(0, 0, 0))
+
+            }
+
+            editTextRepeatEvery.setText("$ruleInterval")
+        }
+
+
         val day = intent.getIntExtra("day", 1)
         val month = intent.getIntExtra("month", 1)
 
@@ -68,6 +121,7 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 displayAlert("Fill interval, please")
                 return@setOnClickListener
             }
+
             var count = editTextRepeatEndAfter.text.toString()
             if (count.isEmpty()) {
                 displayAlert("Fill count occurrence, please")
@@ -89,7 +143,7 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 }
             }
 
-            when(radioGroup.checkedRadioButtonId) {
+            when (radioGroup.checkedRadioButtonId) {
                 R.id.radioBtnAfter -> {
                     rule = "$rule;COUNT=$count"
                 }
@@ -104,16 +158,16 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         radioBtnNever.setOnClickListener {
             editTextRepeatEndAfter.isEnabled = false
             editTextRepeatEndAfter.setTextIsSelectable(false)
-            textEnd2.setTextColor(Color.rgb(139,139,139))
-            radioBtnAfter.setTextColor(Color.rgb(139,139,139))
+            textEnd2.setTextColor(Color.rgb(139, 139, 139))
+            radioBtnAfter.setTextColor(Color.rgb(139, 139, 139))
 
         }
 
         radioBtnAfter.setOnClickListener {
             editTextRepeatEndAfter.isEnabled = true
             editTextRepeatEndAfter.setTextIsSelectable(true)
-            textEnd2.setTextColor(Color.rgb(0,0,0))
-            radioBtnAfter.setTextColor(Color.rgb(0,0,0))
+            textEnd2.setTextColor(Color.rgb(0, 0, 0))
+            radioBtnAfter.setTextColor(Color.rgb(0, 0, 0))
         }
 
     }
@@ -139,7 +193,8 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     .show()
 
                 true
-            }else -> super.onOptionsItemSelected(item)
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
