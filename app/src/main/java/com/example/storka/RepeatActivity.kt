@@ -19,9 +19,28 @@ import org.dmfs.rfc5545.recur.RecurrenceRule
 
 class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
-    private lateinit var switchList: List<Switch>
+    private lateinit var switchWeekDaysList: List<Switch>
     private val days = listOf("MO", "TU", "WE", "TH", "FR", "SA", "SU")
     private val selectedDays = mutableSetOf<String>()
+
+    private fun isAlwaysRepeats(isAlwaysRepeat: Boolean, ruleCount: Int) {
+        if (isAlwaysRepeat) {
+            radioGroup.check(R.id.radioBtnNever)
+            editTextRepeatEndAfter.isEnabled = false
+            editTextRepeatEndAfter.setTextIsSelectable(false)
+            textEnd2.setTextColor(Color.rgb(139, 139, 139))
+            radioBtnAfter.setTextColor(Color.rgb(139, 139, 139))
+            radioBtnNever.setTextColor(Color.rgb(0, 0, 0))
+        } else {
+            radioGroup.check(R.id.radioBtnAfter)
+            editTextRepeatEndAfter.setText("$ruleCount")
+            editTextRepeatEndAfter.isEnabled = true
+            editTextRepeatEndAfter.setTextIsSelectable(true)
+            textEnd2.setTextColor(Color.rgb(0, 0, 0))
+            radioBtnAfter.setTextColor(Color.rgb(0, 0, 0))
+            radioBtnNever.setTextColor(Color.rgb(139, 139, 139))
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +62,8 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         spinnerRepeatMode.onItemSelectedListener = this
 
-        switchList = listOf(switchMon, switchTue, switchWen, switchThu, switchFri, switchSat, switchSun)
-        for ((index, item) in switchList.withIndex()) {
+        switchWeekDaysList = listOf(switchMon, switchTue, switchWen, switchThu, switchFri, switchSat, switchSun)
+        for ((index, item) in switchWeekDaysList.withIndex()) {
             item.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     selectedDays.add(days[index])
@@ -62,13 +81,15 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         switchMon.isChecked = true
         radioGroup.check(R.id.radioBtnNever)
 
+
+
         if (rule != "FREQ=DAILY;INTERVAL=1;COUNT=1" && rule != null) {
             val rrule = RecurrenceRule(rule)
 
             val ruleCount = rrule.count
             val ruleFreq = rrule.freq
             val ruleInterval = rrule.interval
-            val isInfinit = rrule.isInfinite
+            val isInfinite = rrule.isInfinite
 
             when (ruleFreq) {
                 RecurrenceRule.Freq.DAILY -> spinnerRepeatMode.setSelection(0)
@@ -81,30 +102,16 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val weekDays =
                     rule.split(";").find { it.startsWith("BYDAY=") }?.replace("BYDAY=", "")?.split(",") ?: emptyList()
 
-                if (weekDays.contains("TU")) switchTue.isChecked = true
-                if (weekDays.contains("WE")) switchWen.isChecked = true
-                if (weekDays.contains("TH")) switchThu.isChecked = true
-                if (weekDays.contains("FR")) switchFri.isChecked = true
-                if (weekDays.contains("SA")) switchSat.isChecked = true
-                if (weekDays.contains("SU")) switchSun.isChecked = true
-                switchMon.isChecked = weekDays.contains("MO")
+                for (day in weekDays) {
+                    switchMon.isChecked = weekDays.contains("$day")
+                }
+
             }
 
-
-            if (isInfinit) {
-                radioGroup.check(R.id.radioBtnNever)
-                editTextRepeatEndAfter.isEnabled = false
-                editTextRepeatEndAfter.setTextIsSelectable(false)
-                textEnd2.setTextColor(Color.rgb(139, 139, 139))
-                radioBtnAfter.setTextColor(Color.rgb(139, 139, 139))
+            if (isInfinite) {
+                isAlwaysRepeats(true, 1)
             } else {
-                radioGroup.check(R.id.radioBtnAfter)
-                editTextRepeatEndAfter.setText("$ruleCount")
-                editTextRepeatEndAfter.isEnabled = true
-                editTextRepeatEndAfter.setTextIsSelectable(true)
-                textEnd2.setTextColor(Color.rgb(0, 0, 0))
-                radioBtnAfter.setTextColor(Color.rgb(0, 0, 0))
-
+                isAlwaysRepeats(false, ruleCount)
             }
 
             editTextRepeatEvery.setText("$ruleInterval")
@@ -116,13 +123,13 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         buttonSaveRepeat.setOnClickListener {
 
-            var interval = editTextRepeatEvery.text.toString()
+            val interval = editTextRepeatEvery.text.toString()
             if (interval.isBlank() || interval == "0") {
                 displayAlert("Fill interval, please")
                 return@setOnClickListener
             }
 
-            var count = editTextRepeatEndAfter.text.toString()
+            val count = editTextRepeatEndAfter.text.toString()
             if (count.isEmpty()) {
                 displayAlert("Fill count occurrence, please")
                 return@setOnClickListener
@@ -156,18 +163,11 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
 
         radioBtnNever.setOnClickListener {
-            editTextRepeatEndAfter.isEnabled = false
-            editTextRepeatEndAfter.setTextIsSelectable(false)
-            textEnd2.setTextColor(Color.rgb(139, 139, 139))
-            radioBtnAfter.setTextColor(Color.rgb(139, 139, 139))
-
+            isAlwaysRepeats(true, 1)
         }
 
         radioBtnAfter.setOnClickListener {
-            editTextRepeatEndAfter.isEnabled = true
-            editTextRepeatEndAfter.setTextIsSelectable(true)
-            textEnd2.setTextColor(Color.rgb(0, 0, 0))
-            radioBtnAfter.setTextColor(Color.rgb(0, 0, 0))
+            isAlwaysRepeats(false, 1)
         }
 
     }
@@ -201,11 +201,11 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
         when (pos) {
             1 -> {
-                for (item in switchList) item.visibility = View.VISIBLE
+                for (item in switchWeekDaysList) item.visibility = View.VISIBLE
                 textRepeatsOn.visibility = View.VISIBLE
             }
             else -> {
-                for (item in switchList) item.visibility = View.INVISIBLE
+                for (item in switchWeekDaysList) item.visibility = View.INVISIBLE
                 textRepeatsOn.visibility = View.INVISIBLE
             }
         }
@@ -227,7 +227,7 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onBackPressed() {
         AlertDialog.Builder(this@RepeatActivity)
-            .setTitle("Exite without saving?")
+            .setTitle("Exit without saving?")
             .setPositiveButton("Yes") { _, _ ->
                 super.onBackPressed()
             }
