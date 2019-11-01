@@ -1,4 +1,4 @@
-package com.example.storka
+package com.example.megaoreiiiek
 
 import org.junit.Test
 

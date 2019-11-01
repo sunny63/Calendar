@@ -1,14 +1,12 @@
-package com.example.storka
+package com.example.megaoreiiiek
 
-import android.widget.AdapterView
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.storka.api.EventFullModel
-import com.example.storka.api.ExtendedEventInstance
+import com.example.megaoreiiiek.api.ExtendedEventInstance
 import kotlinx.android.synthetic.main.event_recycler_view_item.view.*
 import org.threeten.bp.LocalDate
 

@@ -1,8 +1,9 @@
-package com.example.storka
+package com.example.megaoreiiiek
 
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.*
 
 fun dateTimeToTimestamp(c: LocalDateTime): Long {
     return c.toEpochSecond(ZoneOffset.UTC) * 1000
@@ -13,5 +14,5 @@ fun timestampToDateTime(t: Long): LocalDateTime {
 }
 
 fun formatTime(dateTime: LocalDateTime?): String {
-    return dateTime?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: ""
+    return dateTime?.format(DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH)) ?: ""
 }

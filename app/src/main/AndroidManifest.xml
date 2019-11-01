@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.example.storka">
+          package="com.example.megaoreiiiek">
 
     <application
             android:allowBackup="true"
@@ -12,27 +12,27 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name=".RepeatActivity"
+                android:name="com.example.megaoreiiiek.RepeatActivity"
                 android:label="@string/title_activity_repeat"
-                android:parentActivityName=".EventActivity"
+                android:parentActivityName="com.example.megaoreiiiek.EventActivity"
                 android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.example.storka.EventActivity"/>
+                    android:value="com.example.megaoreiiiek.EventActivity"/>
         </activity>
         <activity
-                android:name=".EventActivity"
+                android:name="com.example.megaoreiiiek.EventActivity"
                 android:label="@string/title_activity_event"
-                android:parentActivityName=".MainActivity"
+                android:parentActivityName="com.example.megaoreiiiek.MainActivity"
                 android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.example.storka.MainActivity"/>
+                    android:value="com.example.megaoreiiiek.MainActivity"/>
         </activity>
-        <activity android:name=".TaskActivity">
+        <activity android:name="com.example.megaoreiiiek.TaskActivity">
         </activity>
         <activity
-                android:name=".MainActivity"
+                android:name="com.example.megaoreiiiek.MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

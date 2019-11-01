@@ -1,4 +1,4 @@
-package com.example.storka
+package com.example.megaoreiiiek
 
 interface OnRecyclerItemClickListener {
     fun onItemClick(id: Long)

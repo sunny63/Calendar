@@ -1,4 +1,4 @@
-package com.example.storka
+package com.example.megaoreiiiek
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4

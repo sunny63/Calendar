@@ -21,12 +21,12 @@
             app:key="messages_header"
             app:title="@string/messages_header"
             app:icon="@drawable/messages"
-            app:fragment="com.example.storka.CreateEventActivity$MessagesFragment"/>
+            app:fragment="com.example.megaoreiiiek.CreateEventActivity$MessagesFragment"/>
 
     <Preference
             app:key="sync_header"
             app:title="@string/sync_header"
             app:icon="@drawable/sync"
-            app:fragment="com.example.storka.CreateEventActivity$SyncFragment"/>
+            app:fragment="com.example.megaoreiiiek.CreateEventActivity$SyncFragment"/>
 
 </androidx.preference.PreferenceScreen>

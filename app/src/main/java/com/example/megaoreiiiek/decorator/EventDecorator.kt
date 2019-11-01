@@ -1,4 +1,4 @@
-package com.example.storka.decorator
+package com.example.megaoreiiiek.decorator
 
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import com.prolificinteractive.materialcalendarview.DayViewFacade

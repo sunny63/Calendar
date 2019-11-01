@@ -1,4 +1,4 @@
-package com.example.storka
+package com.example.megaoreiiiek
 
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -10,19 +10,17 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.storka.api.EventFullModel
-import com.example.storka.api.EventPostModel
-import com.example.storka.api.PatternPostModel
-import com.google.android.material.navigation.NavigationView
+import com.example.megaoreiiiek.api.EventFullModel
+import com.example.megaoreiiiek.api.EventPostModel
+import com.example.megaoreiiiek.api.PatternPostModel
 import kotlinx.android.synthetic.main.activity_event.*
 import kotlinx.android.synthetic.main.content_event.*
-import kotlinx.android.synthetic.main.content_repeat.*
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.*
 
 
 class EventActivity : AppCompatActivity() {
@@ -31,8 +29,8 @@ class EventActivity : AppCompatActivity() {
     private var eventId: Long? = null
     private lateinit var viewModel: CalendarViewModel
     var rule: String? = null
-    val dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+    val dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH)
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -183,7 +181,7 @@ class EventActivity : AppCompatActivity() {
                     EventPostModel(details, location, name, status),
                     PatternPostModel(
                         ended_at - started_at,
-                        dateTimeToTimestamp(LocalDateTime.now().plusYears(1)),
+                        dateTimeToTimestamp(LocalDateTime.now().plusYears(10)),
                         started_at,
                         rule ?: "FREQ=DAILY;INTERVAL=1;COUNT=1",
                         "UTC"
@@ -197,7 +195,7 @@ class EventActivity : AppCompatActivity() {
                         EventFullModel(details, eId, location, name, "", status),
                         PatternPostModel(
                             ended_at - started_at,
-                            dateTimeToTimestamp(LocalDateTime.now().plusYears(1)),
+                            dateTimeToTimestamp(LocalDateTime.now().plusYears(10)),
                             started_at,
                             rule ?: "FREQ=DAILY;INTERVAL=1;COUNT=1",
                             "UTC"

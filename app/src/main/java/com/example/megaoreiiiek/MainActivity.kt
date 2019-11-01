@@ -1,4 +1,4 @@
-package com.example.storka
+package com.example.megaoreiiiek
 
 import android.app.Activity
 import android.content.Intent
@@ -14,8 +14,8 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.storka.api.ExtendedEventInstance
-import com.example.storka.decorator.EventDecorator
+import com.example.megaoreiiiek.api.ExtendedEventInstance
+import com.example.megaoreiiiek.decorator.EventDecorator
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -70,12 +70,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
 
         eventAdapter = EventListAdapter(this, object : OnRecyclerItemClickListener {
-            override fun onItemClick(itemId: Long) {
+            override fun onItemClick(id: Long) {
                 val intent = Intent(this@MainActivity, EventActivity::class.java).apply {
                     action = "EDIT"
-                    putExtra("event_id", itemId)
-                    val event = viewModel.events.value?.find { it.id == itemId }
-                    val pattern = viewModel.patterns.value?.find { it.event_id == itemId }
+                    putExtra("event_id", id)
+                    val event = viewModel.events.value?.find { it.id == id }
+                    val pattern = viewModel.patterns.value?.find { it.event_id == id }
                     putExtra("pattern_id", pattern?.id)
                     putExtra("name", event?.name)
                     putExtra("details", event?.details)
@@ -110,6 +110,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navView.setNavigationItemSelectedListener(this)
 
+        calendarView.setOnMonthChangedListener { _, date ->
+            sync(date.date.minusDays(41).atStartOfDay(), date.date.plusDays(72).atStartOfDay())
+        }
         calendarView.setOnDateChangedListener(this)
         calendarView.selectedDate = selectedDay
 
@@ -117,18 +120,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             isSingIn(false)
             signIn()
         } else {
-            viewModel.startSync(
-                dateTimeToTimestamp(LocalDateTime.now().minusMonths(20)),
-                dateTimeToTimestamp(LocalDateTime.now().plusMonths(20))
-            )
             isSingIn(true)
         }
     }
 
-    private fun sync() {
+    private fun sync(from: LocalDateTime, to: LocalDateTime) {
         viewModel.syncEvents(
-            dateTimeToTimestamp(LocalDateTime.now().minusMonths(20)),
-            dateTimeToTimestamp(LocalDateTime.now().plusMonths(20))
+            dateTimeToTimestamp(from),
+            dateTimeToTimestamp(to)
         )
     }
 
@@ -153,7 +152,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK)
-            sync()
+            sync(calendarView.currentDate.date.minusDays(41).atStartOfDay(), calendarView.currentDate.date.plusDays(72).atStartOfDay())
     }
 
     private fun signIn() {

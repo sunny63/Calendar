@@ -1,4 +1,4 @@
-package com.example.storka.api
+package com.example.megaoreiiiek.api
 
 import android.util.Log
 import com.google.android.gms.tasks.Tasks
@@ -55,7 +55,7 @@ interface Api {
 
     companion object {
 
-        private const val BASE_URL = "http://10.0.2.2:8080/api/v1/"
+        private const val BASE_URL = "http://frrcode.com:9040/api/v1/"
 
         @Volatile
         private var INSTANCE: Api? = null

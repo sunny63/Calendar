@@ -1,4 +1,4 @@
-package com.example.storka
+package com.example.megaoreiiiek
 
 import android.app.Activity
 import android.content.Intent
@@ -11,39 +11,15 @@ import android.widget.ArrayAdapter
 import android.widget.Switch
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_repeat.*
-import kotlinx.android.synthetic.main.content_event.*
 import kotlinx.android.synthetic.main.content_repeat.*
 import org.dmfs.rfc5545.recur.RecurrenceRule
-import java.util.logging.Logger.global
 
 class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var switchWeekDaysList: List<Switch>
     private val days = listOf("MO", "TU", "WE", "TH", "FR", "SA", "SU")
     private val selectedDays = mutableSetOf<String>()
-    var countRepeats = 1
-
-    private fun isAlwaysRepeats(isAlwaysRepeat: Boolean, ruleCount: Int) {
-        if (isAlwaysRepeat) {
-            radioGroup.check(R.id.radioBtnNever)
-            editTextRepeatEndAfter.isEnabled = false
-            editTextRepeatEndAfter.setTextIsSelectable(false)
-            textEnd2.setTextColor(Color.rgb(139, 139, 139))
-            radioBtnAfter.setTextColor(Color.rgb(139, 139, 139))
-            radioBtnNever.setTextColor(Color.rgb(0, 0, 0))
-
-        } else {
-            if (ruleCount != 0) editTextRepeatEndAfter.setText("$ruleCount")
-            radioGroup.check(R.id.radioBtnAfter)
-            editTextRepeatEndAfter.isEnabled = true
-            editTextRepeatEndAfter.setTextIsSelectable(true)
-            textEnd2.setTextColor(Color.rgb(0, 0, 0))
-            radioBtnAfter.setTextColor(Color.rgb(0, 0, 0))
-            radioBtnNever.setTextColor(Color.rgb(139, 139, 139))
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +57,7 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             }
         }
 
-        switchMon.isChecked = true
+        switchSun.isChecked = true
         radioGroup.check(R.id.radioBtnNever)
 
 
@@ -105,10 +81,9 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val weekDays =
                     rule.split(";").find { it.startsWith("BYDAY=") }?.replace("BYDAY=", "")?.split(",") ?: emptyList()
 
-                for (day in weekDays) {
-                    switchMon.isChecked = weekDays.contains("$day")
+                for ((i, switch) in switchWeekDaysList.withIndex()) {
+                    switch.isChecked = weekDays.contains(days[i])
                 }
-
             }
 
             if (isInfinite) {
@@ -200,6 +175,12 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
     }
 
+//    private fun ruleParser(rule: String):Map {
+//        val regex
+//
+//        var ruleList = rule.split(";")
+//    }
+
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
         when (pos) {
             1 -> {
@@ -226,6 +207,28 @@ class RepeatActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             }
         }
     }
+
+
+    private fun isAlwaysRepeats(isAlwaysRepeat: Boolean, ruleCount: Int) {
+        if (isAlwaysRepeat) {
+            radioGroup.check(R.id.radioBtnNever)
+            editTextRepeatEndAfter.isEnabled = false
+            editTextRepeatEndAfter.setTextIsSelectable(false)
+            textEnd2.setTextColor(Color.rgb(139, 139, 139))
+            radioBtnAfter.setTextColor(Color.rgb(139, 139, 139))
+            radioBtnNever.setTextColor(Color.rgb(0, 0, 0))
+
+        } else {
+            if (ruleCount != 0) editTextRepeatEndAfter.setText("$ruleCount")
+            radioGroup.check(R.id.radioBtnAfter)
+            editTextRepeatEndAfter.isEnabled = true
+            editTextRepeatEndAfter.setTextIsSelectable(true)
+            textEnd2.setTextColor(Color.rgb(0, 0, 0))
+            radioBtnAfter.setTextColor(Color.rgb(0, 0, 0))
+            radioBtnNever.setTextColor(Color.rgb(139, 139, 139))
+        }
+    }
+
 
     override fun onBackPressed() {
         AlertDialog.Builder(this@RepeatActivity)

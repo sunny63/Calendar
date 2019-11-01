@@ -1,4 +1,4 @@
-package com.example.storka
+package com.example.megaoreiiiek
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

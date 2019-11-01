@@ -1,11 +1,10 @@
-package com.example.storka
+package com.example.megaoreiiiek
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.storka.api.*
+import com.example.megaoreiiiek.api.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
@@ -16,14 +15,6 @@ class CalendarViewModel(application: Application) : AndroidViewModel(application
     val events = MutableLiveData<List<EventFullModel>>()
     val patterns = MutableLiveData<List<PatternGetModel>>()
     val eventInstances = MutableLiveData<List<EventInstanceModel>>()
-
-    fun startSync(from: Long, to: Long) {
-        Timer().scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                syncEvents(from, to)
-            }
-        }, 0, 10000)
-    }
 
     fun syncEvents(from: Long, to: Long) = viewModelScope.launch(Dispatchers.IO) {
         Api.create()?.let {
@@ -66,7 +57,6 @@ class CalendarViewModel(application: Application) : AndroidViewModel(application
     fun deleteEvent(event_id: Long) = viewModelScope.launch(Dispatchers.IO) {
         Api.create()?.let {
             it.deleteEvent(event_id).execute()
-            sync()
         }
     }
 
@@ -83,15 +73,6 @@ class CalendarViewModel(application: Application) : AndroidViewModel(application
     private fun updatePattern(id: Long, updates: PatternPostModel) = viewModelScope.launch(Dispatchers.IO) {
         Api.create()?.let {
             it.updatePattern(id, updates).execute()
-            sync()
         }
     }
-
-    private fun sync() {
-        syncEvents(
-            dateTimeToTimestamp(LocalDateTime.now().minusMonths(10)),
-            dateTimeToTimestamp(LocalDateTime.now().plusMonths(10))
-        )
-    }
-
 }
