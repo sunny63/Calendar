@@ -14,6 +14,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.megaoreiiiek.api.EventInstanceModel
 import com.example.megaoreiiiek.api.ExtendedEventInstance
 import com.example.megaoreiiiek.decorator.EventDecorator
 import com.firebase.ui.auth.AuthUI
@@ -70,9 +71,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
 
         eventAdapter = EventListAdapter(this, object : OnRecyclerItemClickListener {
-            override fun onItemClick(id: Long) {
+            override fun onItemClick(instance: EventInstanceModel) {
                 val intent = Intent(this@MainActivity, EventActivity::class.java).apply {
                     action = "EDIT"
+                    val id = instance.event_id
                     putExtra("event_id", id)
                     val event = viewModel.events.value?.find { it.id == id }
                     val pattern = viewModel.patterns.value?.find { it.event_id == id }
@@ -84,6 +86,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     putExtra("started_at", pattern?.started_at)
                     putExtra("ended_at", (pattern?.started_at ?: 0) + (pattern?.duration ?: 0))
                     putExtra("rrule", pattern?.rrule)
+
+                    putExtra("instance_started_at", instance.started_at)
+                    putExtra("instance_ended_at", instance.ended_at)
                 }
                 startActivityForResult(intent, 2)
             }
@@ -121,6 +126,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             signIn()
         } else {
             isSingIn(true)
+            sync(LocalDateTime.now().minusDays(41), LocalDateTime.now().plusDays(72))
         }
     }
 

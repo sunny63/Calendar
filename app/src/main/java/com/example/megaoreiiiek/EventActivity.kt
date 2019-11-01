@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -60,10 +61,20 @@ class EventActivity : AppCompatActivity() {
             val started_at = intent.getLongExtra("started_at", -1)
             val ended_at = intent.getLongExtra("ended_at", -1)
 
+            val instance_started_at = intent.getLongExtra("instance_started_at", 0)
+            val instance_ended_at = intent.getLongExtra("instance_ended_at", 0)
+
             editTextName.setText(name)
             editTextDescription.setText(details)
             editTextAdress.setText(location)
             editTextStatus.setText(status)
+
+            textViewInstanceStartDate.visibility = View.VISIBLE
+            textViewInstanceEndDate.visibility = View.VISIBLE
+            textViewStartDate3.visibility = View.VISIBLE
+            textViewStartDate4.visibility = View.VISIBLE
+            textViewInstanceStartDate.text = dateFormatter.format(timestampToDateTime(instance_started_at))
+            textViewInstanceEndDate.text = dateFormatter.format(timestampToDateTime(instance_ended_at))
 
             startedAt = timestampToDateTime(started_at)
             endedAt = timestampToDateTime(ended_at)

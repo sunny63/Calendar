@@ -1,5 +1,7 @@
 package com.example.megaoreiiiek
 
+import com.example.megaoreiiiek.api.EventInstanceModel
+
 interface OnRecyclerItemClickListener {
-    fun onItemClick(id: Long)
+    fun onItemClick(instance: EventInstanceModel)
 }

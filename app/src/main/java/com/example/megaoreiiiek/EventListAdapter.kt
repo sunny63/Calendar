@@ -33,7 +33,7 @@ class EventListAdapter internal constructor(
         val current = events[position]
 
         holder.view.setOnClickListener {
-            listener.onItemClick(current.instance.event_id)
+            listener.onItemClick(current.instance)
         }
 
         holder.eventItemView.text = current.name
